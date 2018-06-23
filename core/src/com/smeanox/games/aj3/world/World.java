@@ -57,7 +57,7 @@ public class World {
             for (City city : cities) {
                 dist2 = Math.min(dist2, dist2(x, y, city.x, city.y));
             }
-            if (dist2 <= range * range) {
+            if (dist2 <= range * range && dist2 > 5) {
                 break;
             }
         }
