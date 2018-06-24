@@ -1,11 +1,12 @@
 package com.smeanox.games.aj3.world;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.smeanox.games.aj3.Consts;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class World {
     public static final World w = new World();
@@ -17,6 +18,9 @@ public class World {
 
     public List<City> cities;
     public List<Airplane> airplanes;
+    public List<ErrorText> errorTexts;
+
+    public Map<City, List<GraphPair>> networkGraph;
 
     private World() {
         newGame();
@@ -28,11 +32,13 @@ public class World {
 
         cities = new ArrayList<City>();
         airplanes = new ArrayList<Airplane>();
+        errorTexts = new ArrayList<ErrorText>();
+        networkGraph = new HashMap<City, List<GraphPair>>();
 
         String name = generateName();
         String code = generateCode(name);
         cities.add(new City(name, code, 0, 0, 1));
-        addCity(10);
+        addCity(100);
     }
 
     public void addCity(float range) {
@@ -57,7 +63,7 @@ public class World {
             for (City city : cities) {
                 dist2 = Math.min(dist2, dist2(x, y, city.x, city.y));
             }
-            if (dist2 <= range * range && dist2 > 5) {
+            if (dist2 <= range * range && dist2 > 50) {
                 break;
             }
         }
@@ -112,7 +118,21 @@ public class World {
     }
 
     public void buildGraph() {
-        // TODO build graph from routes
+        networkGraph.clear();
+        for (City city : cities) {
+            networkGraph.put(city, new ArrayList<GraphPair>());
+        }
+        for (Airplane airplane : airplanes) {
+            if (airplane.schedule.size() < 2) {
+                continue;
+            }
+            City prev = airplane.schedule.get(airplane.schedule.size() - 1).city;
+            for (AirplaneStop airplaneStop : airplane.schedule) {
+                float dist = dist(prev, airplaneStop.city);
+                float time = dist / airplane.type.speed;
+                networkGraph.get(prev).add(new GraphPair(airplaneStop.city, dist, time));
+            }
+        }
     }
 
     public void tick() {
@@ -124,6 +144,12 @@ public class World {
         for (City city : cities) {
             city.tick();
         }
+
+        for (int i = errorTexts.size() - 1; i >= 0; i--) {
+            if (tickNo - errorTexts.get(i).shown > 100) {
+                errorTexts.remove(i);
+            }
+        }
     }
 
     public void doTicks(float delta) {
@@ -131,6 +157,31 @@ public class World {
         while (tickTime >= Consts.TICK_TIME) {
             tickTime -= Consts.TICK_TIME;
             tick();
+        }
+    }
+
+    public class GraphPair {
+        public final City city;
+        public final float dist;
+        public final float time;
+
+        public GraphPair(City city, float dist, float time) {
+            this.city = city;
+            this.dist = dist;
+            this.time = time;
+        }
+    }
+
+    public class ErrorText {
+        public final String text;
+        public final float x, y;
+        public final long shown;
+
+        public ErrorText(String text, float x, float y) {
+            this.text = text;
+            this.x = x;
+            this.y = y;
+            this.shown = tickNo;
         }
     }
 }

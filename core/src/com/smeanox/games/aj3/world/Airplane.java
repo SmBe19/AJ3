@@ -85,6 +85,7 @@ public class Airplane implements Location, Ticking {
     public boolean board(Passenger passenger) {
         if (passengers.size() < type.capacity) {
             passengers.add(passenger);
+            passenger.currentLocation = this;
             return true;
         }
         return false;

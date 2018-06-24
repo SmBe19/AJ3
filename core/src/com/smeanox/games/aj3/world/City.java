@@ -26,8 +26,7 @@ public class City implements Location, Ticking {
     public boolean arrive(Passenger passenger) {
         if (passengers.size() < capacityPassengers) {
             passengers.add(passenger);
-            passenger.arrive();
-            passenger.chooseDestination();
+            passenger.arrive(this);
             return true;
         }
         return false;

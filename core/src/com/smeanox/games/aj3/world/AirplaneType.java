@@ -8,10 +8,10 @@ public enum AirplaneType {
     C ("C", "a", 10000, 100, 8, 3, 1000),
     ;
 
-    String name;
-    Texture imgBuy, imgMap;
-    int price, capacity;
-    float pricePerDist, speed, range;
+    public String name;
+    public Texture imgBuy, imgMap;
+    public int price, capacity;
+    public float pricePerDist, speed, range;
 
     AirplaneType(String name, String img, int price, int capacity, float pricePerDist, float speed, float range) {
         this.name = name;
