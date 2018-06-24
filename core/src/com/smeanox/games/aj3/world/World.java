@@ -19,16 +19,19 @@ public class World {
     public List<City> cities;
     public List<Airplane> airplanes;
     public List<ErrorText> errorTexts;
+    public float passengerRate, cityRate, cityRange;
 
     public Map<City, List<GraphPair>> networkGraph;
 
     private World() {
-        newGame();
     }
 
     public void newGame() {
         tickNo = 0;
         money = 1000;
+        passengerRate = 0.0001f;
+        cityRate = 0.0000001f;
+        cityRange = 100;
 
         cities = new ArrayList<City>();
         airplanes = new ArrayList<Airplane>();
@@ -38,7 +41,13 @@ public class World {
         String name = generateName();
         String code = generateCode(name);
         cities.add(new City(name, code, 0, 0, 1));
-        addCity(100);
+        addCity(cityRange);
+
+        buildGraph();
+
+        for (int i = 0; i < 20; i++) {
+            addPassenger();
+        }
     }
 
     public void addCity(float range) {
@@ -63,11 +72,20 @@ public class World {
             for (City city : cities) {
                 dist2 = Math.min(dist2, dist2(x, y, city.x, city.y));
             }
-            if (dist2 <= range * range && dist2 > 50) {
+            if (dist2 <= range * range && dist2 > 81) {
                 break;
             }
         }
         cities.add(new City(name, code, x, y, MathUtils.random(0.1f, 1)));
+    }
+
+    public void addPassenger() {
+        Passenger passenger = new Passenger();
+        City city = cities.get(MathUtils.random(cities.size() - 1));
+        city.passengers.add(passenger);
+        passenger.start = city;
+        passenger.currentLocation = city;
+        passenger.chooseDestination();
     }
 
     public static float dist(City city1, City city2) {
@@ -90,7 +108,8 @@ public class World {
         StringBuilder name = new StringBuilder();
         String vocals = "aeiou";
         String consonants = "bcdfghjklmnpqrstvwxyz";
-        int length = MathUtils.random(4, 10);
+        //int length = MathUtils.random(4, 10);
+        int length = 8;
         for (int i = 0; i < length; i++) {
             if (i % 2 == 0) {
                 name.append(vocals.charAt(MathUtils.random(vocals.length() - 1)));
@@ -140,15 +159,32 @@ public class World {
             }
             City prev = airplane.schedule.get(airplane.schedule.size() - 1).city;
             for (AirplaneStop airplaneStop : airplane.schedule) {
+                if (airplaneStop.city == null || prev == null) {
+                    continue;
+                }
                 float dist = dist(prev, airplaneStop.city);
                 float time = dist / airplane.type.speed;
                 networkGraph.get(prev).add(new GraphPair(airplaneStop.city, dist, time));
+                prev = airplaneStop.city;
             }
         }
     }
 
     public void tick() {
         tickNo++;
+
+        if (MathUtils.randomBoolean(passengerRate)) {
+            System.out.println("New Passenger");
+            addPassenger();
+        }
+        passengerRate *= 1.0001f;
+
+        if (MathUtils.randomBoolean(cityRate)) {
+            cityRange *= 1.5f;
+            System.out.println("New City");
+            addCity(cityRange);
+        }
+        cityRate *= 1.0000001f;
 
         for (Airplane airplane : airplanes) {
             airplane.tick();
@@ -158,7 +194,7 @@ public class World {
         }
 
         for (int i = errorTexts.size() - 1; i >= 0; i--) {
-            if (tickNo - errorTexts.get(i).shown > 100) {
+            if (tickNo - errorTexts.get(i).shown > 10) {
                 errorTexts.remove(i);
             }
         }

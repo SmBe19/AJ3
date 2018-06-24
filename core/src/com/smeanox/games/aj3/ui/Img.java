@@ -13,6 +13,12 @@ public enum Img {
     close("close"),
     levelUp("level_up"),
     remove("remove"),
+    waitEmpty("wait_empty"),
+    waitFull("wait_full"),
+    waitTimePlus("wait_time_plus"),
+    waitTimeMinus("wait_time_minus"),
+    waitPassengerPlus("wait_passenger_plus"),
+    waitPassengerMinus("wait_passenger_minus"),
     ;
 
     public Texture t;

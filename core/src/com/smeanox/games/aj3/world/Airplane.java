@@ -1,5 +1,8 @@
 package com.smeanox.games.aj3.world;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +18,7 @@ public class Airplane implements Location, Ticking {
     public int currentScheduleEntry;
     public AirplaneStop currentStop;
     public final List<Passenger> passengers;
+    private Vector2 location = new Vector2(), location2 = new Vector2();
 
     public Airplane(AirplaneType type) {
         this.type = type;
@@ -112,6 +116,26 @@ public class Airplane implements Location, Ticking {
         }
     }
 
+    public float getProgress() {
+        float dist = World.dist(start, destination);
+        float disttime = dist / type.speed;
+        long airtime = World.w.tickNo - startTime;
+        return airtime / disttime;
+    }
+
+    public Vector2 getLocation() {
+        if (waitTime < 0 && landedTime < 0) {
+            float progress = getProgress();
+            location.set(start.x, start.y);
+            location2.set(destination.x, destination.y);
+            location.lerp(location2, MathUtils.clamp(progress, 0, 1));
+            return location;
+        } else {
+            // TODO implement if necessary
+            return location;
+        }
+    }
+
     @Override
     public void tick() {
         if (waitTime >= 0) {
@@ -132,6 +156,9 @@ public class Airplane implements Location, Ticking {
                 }
             }
         } else if (landedTime >= 0) {
+            if (destination == null || (currentStop != null && start != currentStop.city)) {
+                nextScheduleEntry();
+            }
             // at airport
             if (currentStop == null || currentStop.check(this)) {
                 start();

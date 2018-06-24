@@ -16,8 +16,6 @@ public class RouteEditWindow extends Window {
     private final Map<AirplaneStop, UIElement> stopToElement = new HashMap<AirplaneStop, UIElement>();
     private final List<UIElement> list = new ArrayList<UIElement>();
 
-    protected int selected;
-
     public RouteEditWindow(float x, float y, final Airplane airplane) {
         super(x, y, 350, 300);
         this.airplane = airplane;
@@ -26,16 +24,24 @@ public class RouteEditWindow extends Window {
         uiElements.add(new DynamicTextField(10, h - 60, 0, 0, new DynamicTextField.TextFieldUpdater() {
             @Override
             public String update(DynamicTextField textField) {
-                return "Location: " + airplane.getLocationString();
+                return airplane.getLocationString();
             }
         }));
-        uiElements.add(new Button(w - 40, h - 100, 32, 32, Img.add.t, new Button.OnClickHandler() {
+        uiElements.add(new DynamicTextField(10, h - 80, 0, 0, new DynamicTextField.TextFieldUpdater() {
+            @Override
+            public String update(DynamicTextField textField) {
+                return "Passengers: " + airplane.passengers.size() + " / " + airplane.type.capacity;
+            }
+        }));
+        uiElements.add(new Button(w - 40, h - 120, 32, 32, Img.add.t, new Button.OnClickHandler() {
             @Override
             public void onClick() {
-                list.add(createStopElement(new AirplaneStop()));
+                AirplaneStop stop = new AirplaneStop();
+                airplane.schedule.add(stop);
+                list.add(createStopElement(stop));
             }
         }));
-        uiElements.add(new ScrollList(10, 10, w - 20, h - 80, new ScrollList.ListProvider() {
+        uiElements.add(new ScrollList(10, 10, w - 20, h - 100, new ScrollList.ListProvider() {
             @Override
             public List<UIElement> provide() {
                 return list;

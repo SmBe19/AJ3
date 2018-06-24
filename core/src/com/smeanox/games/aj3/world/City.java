@@ -33,7 +33,7 @@ public class City implements Location, Ticking {
     }
 
     public long levelUpCost() {
-        return (long) Math.ceil(Math.pow(2, level/2)) * 100;
+        return (long) Math.ceil(Math.pow(2, level)) * 10000;
     }
 
     public void levelUp() {
@@ -54,10 +54,10 @@ public class City implements Location, Ticking {
     public void tick() {
         for (Passenger passenger : new ArrayList<Passenger>(passengers)) {
             if (passenger.nextDestination == null) {
-                if (World.w.tickNo % 100 == 0) {
+                if (World.w.tickNo % 10 == 0) {
                     passenger.chooseNextDestination();
                 }
-                break;
+                continue;
             }
             for (Airplane currentAirplane : currentAirplanes) {
                 if (currentAirplane.destination == passenger.nextDestination) {

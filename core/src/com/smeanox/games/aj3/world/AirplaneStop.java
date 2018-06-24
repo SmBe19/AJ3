@@ -1,5 +1,7 @@
 package com.smeanox.games.aj3.world;
 
+import com.smeanox.games.aj3.Consts;
+
 public class AirplaneStop {
     public City city;
     public Condition condition;
@@ -46,7 +48,7 @@ public class AirplaneStop {
     }
 
     public static class ConditionTime extends Condition {
-        final long time;
+        public long time;
 
         public ConditionTime(long time) {
             this.time = time;
@@ -54,7 +56,7 @@ public class AirplaneStop {
 
         @Override
         public boolean check(Airplane airplane, City city) {
-            return airplane.landedTime >= 0 && World.w.tickNo - airplane.landedTime >= time;
+            return airplane.landedTime >= 0 && World.w.tickNo - airplane.landedTime >= time / Consts.TICK_TIME;
         }
 
         @Override
@@ -64,7 +66,7 @@ public class AirplaneStop {
     }
 
     public static class ConditionPassenger extends Condition {
-        final int passenger;
+        public int passenger;
 
         public ConditionPassenger(int passenger) {
             this.passenger = passenger;
@@ -77,7 +79,7 @@ public class AirplaneStop {
 
         @Override
         public String toString() {
-            return "> " + passenger + " passengers";
+            return "> " + passenger + " dudes";
         }
     }
 }

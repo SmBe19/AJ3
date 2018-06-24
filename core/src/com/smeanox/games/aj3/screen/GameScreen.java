@@ -11,12 +11,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.smeanox.games.aj3.AJ3Colors;
 import com.smeanox.games.aj3.Consts;
 import com.smeanox.games.aj3.ui.AirplaneListWindow;
 import com.smeanox.games.aj3.ui.Button;
 import com.smeanox.games.aj3.ui.BuyAirplaneWindow;
+import com.smeanox.games.aj3.ui.CityDetailWindow;
 import com.smeanox.games.aj3.ui.Font;
 import com.smeanox.games.aj3.ui.Img;
 import com.smeanox.games.aj3.ui.RouteEditWindow;
@@ -24,6 +26,7 @@ import com.smeanox.games.aj3.ui.UIElement;
 import com.smeanox.games.aj3.ui.Window;
 import com.smeanox.games.aj3.ui.WindowManager;
 import com.smeanox.games.aj3.world.Airplane;
+import com.smeanox.games.aj3.world.AirplaneStop;
 import com.smeanox.games.aj3.world.AirplaneType;
 import com.smeanox.games.aj3.world.City;
 import com.smeanox.games.aj3.world.World;
@@ -44,6 +47,8 @@ public class GameScreen implements Screen {
     private Texture bg, map;
     private Texture[] cities;
     private Vector3 project = new Vector3();
+    private Vector2 location = new Vector2();
+    private Vector2 location2 = new Vector2();
 
     private AirplaneType buyingAirplane;
     private static GlyphLayout glyphLayout = new GlyphLayout();
@@ -92,10 +97,13 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(new InputMultiplexer(windowManager, new Inputter()));
-        for (int i = 0; i < 20; i++) {
+        World.w.newGame();
+        for (int i = 0; i < 2; i++) {
             World.w.money += 1000;
             World.w.buyAirplane(AirplaneType.A, World.w.cities.get(0));
         }
+        World.w.airplanes.get(0).schedule.add(new AirplaneStop(World.w.cities.get(1)));
+        World.w.buildGraph();
     }
 
     public void update(float delta) {
@@ -126,7 +134,7 @@ public class GameScreen implements Screen {
         return sb.toString();
     }
 
-    public static void  renderTextAligned(SpriteBatch spriteBatch, BitmapFont font, String text, float x, float y, float xAlign, float yAlign) {
+    public static void renderTextAligned(SpriteBatch spriteBatch, BitmapFont font, String text, float x, float y, float xAlign, float yAlign) {
         glyphLayout.setText(font, text);
         //font.draw(spriteBatch, text, x + xAlign * glyphLayout.width, y + yAlign * glyphLayout.height);
         font.draw(spriteBatch, glyphLayout, x + xAlign * glyphLayout.width, y + yAlign * glyphLayout.height);
@@ -147,33 +155,28 @@ public class GameScreen implements Screen {
         spriteBatch.begin();
 
         spriteBatch.setProjectionMatrix(mapCamera.combined);
-        Vector3 topleft = new Vector3(), bottomright = new Vector3();
-        Vector3 tmptl = new Vector3(), tmpbr = new Vector3();
-        while (mapCamera.project(tmptl).x >= 0) {
-            topleft.x -= map.getWidth();
-            tmptl.set(topleft);
-        }
-        while (mapCamera.project(tmpbr).x <= mapCamera.viewportWidth) {
-            bottomright.x += map.getWidth();
-            tmpbr.set(bottomright);
-        }
-        while (mapCamera.project(tmptl).y >= 0) {
-            topleft.y -= map.getHeight();
-            tmptl.set(topleft);
-        }
-        while (mapCamera.project(tmpbr).y <= mapCamera.viewportHeight) {
-            bottomright.y += map.getHeight();
-            tmpbr.set(bottomright);
-        }
-        for (float x = topleft.x; x <= bottomright.x; x += map.getWidth()) {
-            for (float y = topleft.y; y <= bottomright.y; y += map.getHeight()) {
-                spriteBatch.draw(map, x, y);
-            }
-        }
+
+        renderMap();
 
         for (City city : World.w.cities) {
             Texture texture = cities[Math.min(city.level, cities.length - 1)];
             renderCenter(spriteBatch, texture, city.x, city.y);
+        }
+
+        for (Airplane airplane : World.w.airplanes) {
+            if (airplane.waitTime >= 0) {
+                float progress = (World.w.tickNo - airplane.waitTime) * 12;
+                Texture img = airplane.type.imgMap;
+                spriteBatch.draw(img, airplane.destination.x - 32, airplane.destination.y - 16, 32, 16, 64, 32, 1, 1, progress, 0, 0, img.getWidth(), img.getHeight(), false, false);
+            } else if (airplane.startTime >= 0) {
+                float progress = airplane.getProgress();
+                location.set(airplane.start.x, airplane.start.y);
+                location2.set(airplane.destination.x, airplane.destination.y);
+                float rotation = MathUtils.atan2(location2.y - location.y, location2.x - location.x) * MathUtils.radiansToDegrees;
+                location.lerp(location2, MathUtils.clamp(progress, 0, 1));
+                Texture img = airplane.type.imgMap;
+                spriteBatch.draw(img, location.x - 32, location.y - 16, 32f, 16f, 64f, 32f, 1f, 1f, rotation, 0, 0, img.getWidth(), img.getHeight(), false, false);
+            }
         }
 
         if (buyingAirplane != null) {
@@ -210,6 +213,32 @@ public class GameScreen implements Screen {
         windowManager.render(spriteBatch);
 
         spriteBatch.end();
+    }
+
+    private void renderMap() {
+        Vector3 topleft = new Vector3(), bottomright = new Vector3();
+        Vector3 tmptl = new Vector3(), tmpbr = new Vector3();
+        while (mapCamera.project(tmptl).x >= 0) {
+            topleft.x -= map.getWidth();
+            tmptl.set(topleft);
+        }
+        while (mapCamera.project(tmpbr).x <= mapCamera.viewportWidth) {
+            bottomright.x += map.getWidth();
+            tmpbr.set(bottomright);
+        }
+        while (mapCamera.project(tmptl).y >= 0) {
+            topleft.y -= map.getHeight();
+            tmptl.set(topleft);
+        }
+        while (mapCamera.project(tmpbr).y <= mapCamera.viewportHeight) {
+            bottomright.y += map.getHeight();
+            tmpbr.set(bottomright);
+        }
+        for (float x = topleft.x; x <= bottomright.x; x += map.getWidth()) {
+            for (float y = topleft.y; y <= bottomright.y; y += map.getHeight()) {
+                spriteBatch.draw(map, x, y);
+            }
+        }
     }
 
     public void buyAirplane(City city) {
@@ -262,6 +291,18 @@ public class GameScreen implements Screen {
                 if (clickedUIElement != null) {
                     uiCamera.unproject(project.set(screenX, screenY, 0));
                     clickedUIElement.touchUp(project.x, project.y);
+                } else if (!dragged && buyingAirplane == null) {
+                    City clickedCity = findClickedCity(screenX, screenY);
+                    if (clickedCity != null) {
+                        uiCamera.unproject(project.set(screenX, screenY, 0));
+                        windowManager.addWindow(new CityDetailWindow(project.x - 50, project.y - 50, clickedCity));
+                    } else {
+                        Airplane clickedAirplane = findClickedAirplane(screenX, screenY);
+                        if (clickedAirplane != null) {
+                            uiCamera.unproject(project.set(screenX, screenY, 0));
+                            windowManager.addWindow(new RouteEditWindow(project.x - 50, project.y - 50, clickedAirplane));
+                        }
+                    }
                 }
                 clickedUIElement = null;
                 dragged = false;
@@ -286,12 +327,16 @@ public class GameScreen implements Screen {
                 if (clickedUIElement != null) {
                     clickedUIElement.touchDown(project.x, project.y);
                 }
+                touchDownX = screenX;
+                touchDownY = screenY;
+                dragged = false;
                 if (buyingAirplane != null) {
                     City clickedCity = findClickedCity(screenX, screenY);
                     if (clickedCity != null) {
                         if (clickedCity.currentAirplanes.size() < clickedCity.capacityAirplanes) {
                             if (World.w.money >= buyingAirplane.price) {
                                 buyAirplane(clickedCity);
+                                dragged = true;
                             } else {
                                 World.w.errorTexts.add(World.w.new ErrorText("Not enough money", project.x, project.y));
                             }
@@ -301,9 +346,6 @@ public class GameScreen implements Screen {
                         }
                     }
                 }
-                touchDownX = screenX;
-                touchDownY = screenY;
-                dragged = false;
                 return true;
             }
             return false;
@@ -341,6 +383,17 @@ public class GameScreen implements Screen {
             for (City city : World.w.cities) {
                 if (World.dist2(city.x, city.y, project.x, project.y) < 81) {
                     return city;
+                }
+            }
+            return null;
+        }
+
+        public Airplane findClickedAirplane(int screenX, int screenY) {
+            mapCamera.unproject(project.set(screenX, screenY, 0));
+            for (Airplane airplane : World.w.airplanes) {
+                location.set(airplane.getLocation());
+                if (World.dist2(location.x, location.y, project.x, project.y) < 81) {
+                    return airplane;
                 }
             }
             return null;

@@ -20,11 +20,12 @@ public class Passenger {
     public void chooseDestination() {
         startTime = World.w.tickNo;
         do {
-            destination = World.w.cities.get(MathUtils.random(World.w.cities.size()));
+            destination = World.w.cities.get(MathUtils.random(World.w.cities.size() - 1));
             if (!MathUtils.randomBoolean(destination.popularity)) {
                 destination = start;
             }
         } while (destination == start);
+        chooseNextDestination();
     }
 
     public void arriveDestination() {
@@ -35,10 +36,12 @@ public class Passenger {
         World.w.money += newMoney;
         start = destination;
         destination = null;
-        chooseDestination();
     }
 
     public void arrive(City city) {
+        if (city == destination) {
+            arriveDestination();
+        }
         currentLocation = city;
         nextDestination = null;
         chooseNextDestination();
@@ -75,7 +78,7 @@ public class Passenger {
                     continue;
                 }
                 float newDist = ae.dist + distExtractor.dist(ae.city, neighbor);
-                if (newDist < dist.get(neighbor.city)) {
+                if (!dist.containsKey(neighbor.city) || newDist < dist.get(neighbor.city)) {
                     pq.add(new DijkstraEntry(neighbor.city, newDist));
                     dist.put(neighbor.city, newDist);
                     par.put(neighbor.city, ae.city);
@@ -83,7 +86,7 @@ public class Passenger {
             }
         }
 
-        if (!par.containsKey(currentLocation)) {
+        if (!par.containsKey(destination)) {
             nextDestination = null;
         } else {
             nextDestination = destination;

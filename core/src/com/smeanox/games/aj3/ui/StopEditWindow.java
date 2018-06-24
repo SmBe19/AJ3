@@ -1,5 +1,7 @@
 package com.smeanox.games.aj3.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.smeanox.games.aj3.world.Airplane;
 import com.smeanox.games.aj3.world.AirplaneStop;
 import com.smeanox.games.aj3.world.City;
@@ -16,11 +18,11 @@ public class StopEditWindow extends Window {
     private final List<UIElement> list = new ArrayList<UIElement>();
 
     public StopEditWindow(float x, float y, Airplane airplane, final AirplaneStop stop) {
-        super(x, y, 200, 200);
+        super(x, y, 250, 300);
         this.airplane = airplane;
         this.stop = stop;
 
-        uiElements.add(new ScrollList(10, 10, 180, 175, new ScrollList.ListProvider() {
+        uiElements.add(new ScrollList(10, 110, 230, 175, new ScrollList.ListProvider() {
             @Override
             public List<UIElement> provide() {
                 return list;
@@ -28,7 +30,7 @@ public class StopEditWindow extends Window {
         }));
 
         for (final City city : World.w.cities) {
-            list.add(new TextField(0, 0, 180, 20, city.fullName()) {
+            list.add(new TextField(0, 0, 230, 20, city.fullName()) {
                 @Override
                 public boolean touchDown(float x, float y) {
                     stop.city = city;
@@ -38,6 +40,67 @@ public class StopEditWindow extends Window {
                 }
             });
         }
+
+        uiElements.add(new Button(10, 10, 32, 32, Img.waitEmpty.t, new Button.OnClickHandler() {
+            @Override
+            public void onClick() {
+                stop.condition = new AirplaneStop.ConditionEmpty();
+            }
+        }));
+        uiElements.add(new Button(50, 10, 32, 32, Img.waitFull.t, new Button.OnClickHandler() {
+            @Override
+            public void onClick() {
+                stop.condition = new AirplaneStop.ConditionFull();
+            }
+        }));
+        uiElements.add(new Button(90, 10, 32, 32, Img.waitTimeMinus.t, new Button.OnClickHandler() {
+            @Override
+            public void onClick() {
+                if (stop.condition instanceof AirplaneStop.ConditionTime) {
+                    int add = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 10 : 1;
+                    if (((AirplaneStop.ConditionTime) stop.condition).time >= add) {
+                        ((AirplaneStop.ConditionTime) stop.condition).time -= add;
+                    }
+                } else {
+                    stop.condition = new AirplaneStop.ConditionTime(10);
+                }
+            }
+        }));
+        uiElements.add(new Button(130, 10, 32, 32, Img.waitTimePlus.t, new Button.OnClickHandler() {
+            @Override
+            public void onClick() {
+                if (stop.condition instanceof AirplaneStop.ConditionTime) {
+                    int add = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 10 : 1;
+                    ((AirplaneStop.ConditionTime) stop.condition).time += add;
+                } else {
+                    stop.condition = new AirplaneStop.ConditionTime(10);
+                }
+            }
+        }));
+        uiElements.add(new Button(170, 10, 32, 32, Img.waitPassengerMinus.t, new Button.OnClickHandler() {
+            @Override
+            public void onClick() {
+                if (stop.condition instanceof AirplaneStop.ConditionPassenger) {
+                    int add = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 10 : 1;
+                    if (((AirplaneStop.ConditionPassenger) stop.condition).passenger >= add) {
+                        ((AirplaneStop.ConditionPassenger) stop.condition).passenger -= add;
+                    }
+                } else {
+                    stop.condition = new AirplaneStop.ConditionPassenger(1);
+                }
+            }
+        }));
+        uiElements.add(new Button(210, 10, 32, 32, Img.waitPassengerPlus.t, new Button.OnClickHandler() {
+            @Override
+            public void onClick() {
+                if (stop.condition instanceof AirplaneStop.ConditionPassenger) {
+                    int add = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 10 : 1;
+                    ((AirplaneStop.ConditionPassenger) stop.condition).passenger += add;
+                } else {
+                    stop.condition = new AirplaneStop.ConditionPassenger(1);
+                }
+            }
+        }));
     }
 
     @Override

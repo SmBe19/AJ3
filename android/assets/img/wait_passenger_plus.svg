@@ -15,7 +15,7 @@
    version="1.1"
    id="svg125"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="level_up.svg">
+   sodipodi:docname="wait_passenger_plus.svg">
   <defs
      id="defs119" />
   <sodipodi:namedview
@@ -46,7 +46,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -55,28 +55,33 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-280.06664)">
-    <rect
-       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:0.79697084;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect2618"
-       width="2.6458333"
-       height="10.583333"
-       x="7.1437502"
-       y="285.29214" />
+    <circle
+       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:0.31281567;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2641"
+       cx="8.4666672"
+       cy="285.75516"
+       r="1.7197918" />
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:1.0583334;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path2620"
+       style="fill:#fe5e41;fill-opacity:0.99595139;stroke:none;stroke-width:0.6349625;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2687"
        sodipodi:sides="3"
-       sodipodi:cx="8.4666668"
-       sodipodi:cy="287.01196"
-       sodipodi:r1="5.473043"
-       sodipodi:r2="2.7365217"
+       sodipodi:cx="13.121341"
+       sodipodi:cy="293.64328"
+       sodipodi:r1="3.1414626"
+       sodipodi:r2="1.5707313"
        sodipodi:arg1="0.52359878"
        sodipodi:arg2="1.5707963"
        inkscape:flatsided="true"
        inkscape:rounded="0"
        inkscape:randomized="0"
-       d="m 13.206461,289.74848 -9.4795881,0 4.7397943,-8.20956 z"
-       inkscape:transform-center-y="-1.3682609" />
+       d="m 15.841927,295.21401 -5.441173,0 2.720587,-4.71219 z"
+       inkscape:transform-center-y="-0.78535544" />
+    <circle
+       r="2.993099"
+       cy="289.90579"
+       cx="8.4666672"
+       id="circle2727"
+       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:0.54441959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>
