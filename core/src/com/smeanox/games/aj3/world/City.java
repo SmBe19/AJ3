@@ -55,11 +55,13 @@ public class City implements Location, Ticking {
     @Override
     public void tick() {
         for (Passenger passenger : new ArrayList<Passenger>(passengers)) {
-            if (passenger.nextDestination == null) {
+            if (passenger.nextDestination == null || (World.w.tickNo - passenger.startTime) > 100) {
                 if (World.w.tickNo % 10 == 0) {
                     passenger.chooseNextDestination();
                 }
-                continue;
+                if (passenger.nextDestination == null) {
+                    continue;
+                }
             }
             for (Airplane currentAirplane : currentAirplanes) {
                 if (currentAirplane.destination == passenger.nextDestination) {

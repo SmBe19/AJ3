@@ -3,7 +3,7 @@ cd "$(dirname "$0")"
 ./convert.sh bg.svg 800 480
 ./convert.sh map.svg 2048 2048
 
-for plane in a; do
+for plane in a b c d; do
     ./convert.sh airplane_buy_$plane.svg 128 32
     ./convert.sh airplane_map_$plane.svg 128 64
 done
