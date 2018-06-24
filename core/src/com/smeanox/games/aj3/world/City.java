@@ -28,6 +28,8 @@ public class City implements Location, Ticking {
             passengers.add(passenger);
             passenger.arrive(this);
             return true;
+        } else {
+            World.w.errorTexts.add(World.w.new ErrorText(code + " is full (passengers)", x, y));
         }
         return false;
     }

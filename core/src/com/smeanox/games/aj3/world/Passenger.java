@@ -1,6 +1,7 @@
 package com.smeanox.games.aj3.world;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.smeanox.games.aj3.screen.GameScreen;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class Passenger {
         long duration = World.w.tickNo - startTime;
         float dist = World.dist(start, destination);
         float speed = dist / duration;
-        long newMoney = (long) Math.ceil(speed * 0.1f);
+        long newMoney = (long) Math.ceil(speed * 70);
         World.w.money += newMoney;
         start = destination;
         destination = null;
@@ -48,7 +49,7 @@ public class Passenger {
     }
 
     public void chooseNextDestination() {
-        if (currentLocation == destination) {
+        if (destination == null || currentLocation == destination) {
             chooseDestination();
         } else {
             chooseNextDestination(MathUtils.randomBoolean(0.6f) ? timeExtractor : distExtractor);

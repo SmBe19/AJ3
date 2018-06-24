@@ -5,7 +5,11 @@ public class DynamicTextField extends TextField {
     protected final TextFieldUpdater updater;
 
     public DynamicTextField(float x, float y, float w, float h, TextFieldUpdater updater) {
-        super(x, y, w, h, "");
+        this(x, y, w, h, 0, 0,updater);
+    }
+
+    public DynamicTextField(float x, float y, float w, float h, float alignX, float alignY, TextFieldUpdater updater) {
+        super(x, y, w, h, "", alignX, alignY);
         this.updater = updater;
     }
 

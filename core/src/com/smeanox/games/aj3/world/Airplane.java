@@ -2,6 +2,7 @@ package com.smeanox.games.aj3.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.smeanox.games.aj3.screen.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class Airplane implements Location, Ticking {
         startTime = World.w.tickNo;
         waitTime = -1;
         landedTime = -1;
+        World.w.successTexts.add(World.w.new ErrorText("Started: " + getFullName() + " " + getLocationString() +  ": -" + GameScreen.formatMoney(cost), 0, 0));
         start.currentAirplanes.remove(this);
     }
 
@@ -73,17 +75,20 @@ public class Airplane implements Location, Ticking {
 
         List<Passenger> origPassengers = new ArrayList<Passenger>(passengers);
         passengers.clear();
+        long currentMoney = World.w.money;
         for (Passenger origPassenger : origPassengers) {
             if (!start.arrive(origPassenger)) {
                 passengers.add(origPassenger);
             }
         }
+        long newMoney = World.w.money - currentMoney;
+        World.w.successTexts.add(World.w.new ErrorText("Landed: " + getFullName() + " " + getLocationString() + ": +" + GameScreen.formatMoney(newMoney), 0, 0));
 
         nextScheduleEntry();
     }
 
     public void nextScheduleEntry() {
-        currentStop = currentScheduleEntry < schedule.size() ? schedule.get(currentScheduleEntry) : null;
+        currentStop = (currentScheduleEntry >= 0 && currentScheduleEntry < schedule.size()) ? schedule.get(currentScheduleEntry) : null;
         currentScheduleEntry++;
         if (currentScheduleEntry >= schedule.size()) {
             currentScheduleEntry = 0;
@@ -136,6 +141,16 @@ public class Airplane implements Location, Ticking {
         }
     }
 
+    public void initSchedule() {
+        if (!schedule.contains(currentStop)) {
+            currentStop = null;
+            currentScheduleEntry = 0;
+        } else {
+            currentScheduleEntry = schedule.indexOf(currentStop);
+        }
+        nextScheduleEntry();
+    }
+
     @Override
     public void tick() {
         if (waitTime >= 0) {
@@ -153,6 +168,7 @@ public class Airplane implements Location, Ticking {
                     land();
                 } else {
                     waitTime = World.w.tickNo;
+                    World.w.errorTexts.add(World.w.new ErrorText(destination.code + " is full (airplanes)", destination.x, destination.y));
                 }
             }
         } else if (landedTime >= 0) {

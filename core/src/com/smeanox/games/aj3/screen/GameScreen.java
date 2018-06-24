@@ -98,12 +98,15 @@ public class GameScreen implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(new InputMultiplexer(windowManager, new Inputter()));
         World.w.newGame();
+
+        /*
         for (int i = 0; i < 2; i++) {
             World.w.money += 1000;
             World.w.buyAirplane(AirplaneType.A, World.w.cities.get(0));
         }
         World.w.airplanes.get(0).schedule.add(new AirplaneStop(World.w.cities.get(1)));
         World.w.buildGraph();
+        */
     }
 
     public void update(float delta) {
@@ -196,6 +199,13 @@ public class GameScreen implements Screen {
         for (World.ErrorText errorText : World.w.errorTexts) {
             mapCamera.project(project.set(errorText.x, errorText.y, 0));
             renderTextAligned(spriteBatch, Font.f16.f, errorText.text, project.x, project.y, -0.5f, -0.5f);
+        }
+
+        Font.f16.f.setColor(AJ3Colors.black.c);
+        float offY = 40;
+        for (World.ErrorText successText : World.w.successTexts) {
+            Font.f16.f.draw(spriteBatch, successText.text, 40, offY);
+            offY += 20;
         }
 
         spriteBatch.draw(bg, 0, 0, width, height);

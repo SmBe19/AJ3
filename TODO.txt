@@ -1,10 +1,4 @@
-Graph aufbauen, dann kürzesten Weg für Passagiere berechnen
-Flugzeuge kaufen
-Flugzeugrouten bearbeiten
-Flugzeuge anzeigen
-Neue Städte erstellen
-Städte upgraden
+Flugzeugrouten besser bearbeiten
 Graphen mit Einkommen & transportierte Personen
-Tabelle mit Reiseziele
-Anzeige, falls Flughafen überfüllt ist
-Geldänderung anzeigen
+Bessere Graphiken für Flugzeuge
+Range implementieren

@@ -19,6 +19,7 @@ public class World {
     public List<City> cities;
     public List<Airplane> airplanes;
     public List<ErrorText> errorTexts;
+    public List<ErrorText> successTexts;
     public float passengerRate, cityRate, cityRange;
 
     public Map<City, List<GraphPair>> networkGraph;
@@ -29,13 +30,14 @@ public class World {
     public void newGame() {
         tickNo = 0;
         money = 1000;
-        passengerRate = 0.0001f;
-        cityRate = 0.0000001f;
+        passengerRate = 0.02f;
+        cityRate = 0.001f;
         cityRange = 100;
 
         cities = new ArrayList<City>();
         airplanes = new ArrayList<Airplane>();
         errorTexts = new ArrayList<ErrorText>();
+        successTexts = new ArrayList<ErrorText>();
         networkGraph = new HashMap<City, List<GraphPair>>();
 
         String name = generateName();
@@ -76,7 +78,11 @@ public class World {
                 break;
             }
         }
-        cities.add(new City(name, code, x, y, MathUtils.random(0.1f, 1)));
+        City newCity = new City(name, code, x, y, MathUtils.random(0.1f, 1));
+        cities.add(newCity);
+        buildGraph();
+
+        successTexts.add(new ErrorText("New City: " + newCity.fullName(), 0, 0, tickNo + 100));
     }
 
     public void addPassenger() {
@@ -177,14 +183,14 @@ public class World {
             System.out.println("New Passenger");
             addPassenger();
         }
-        passengerRate *= 1.0001f;
+        passengerRate *= 1.001f;
 
         if (MathUtils.randomBoolean(cityRate)) {
-            cityRange *= 1.5f;
+            cityRange *= 1.2f;
             System.out.println("New City");
             addCity(cityRange);
         }
-        cityRate *= 1.0000001f;
+        cityRate *= 1.00001f;
 
         for (Airplane airplane : airplanes) {
             airplane.tick();
@@ -196,6 +202,12 @@ public class World {
         for (int i = errorTexts.size() - 1; i >= 0; i--) {
             if (tickNo - errorTexts.get(i).shown > 10) {
                 errorTexts.remove(i);
+            }
+        }
+
+        for (int i = successTexts.size() - 1; i >= 0; i--) {
+            if (tickNo - successTexts.get(i).shown > 40) {
+                successTexts.remove(i);
             }
         }
     }
@@ -230,6 +242,13 @@ public class World {
             this.x = x;
             this.y = y;
             this.shown = tickNo;
+        }
+
+        public ErrorText(String text, float x, float y, long shown) {
+            this.text = text;
+            this.x = x;
+            this.y = y;
+            this.shown = shown;
         }
     }
 }

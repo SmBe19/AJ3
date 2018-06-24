@@ -17,7 +17,7 @@ public class StopEditWindow extends Window {
 
     private final List<UIElement> list = new ArrayList<UIElement>();
 
-    public StopEditWindow(float x, float y, Airplane airplane, final AirplaneStop stop) {
+    public StopEditWindow(float x, float y, final Airplane airplane, final AirplaneStop stop) {
         super(x, y, 250, 300);
         this.airplane = airplane;
         this.stop = stop;
@@ -35,6 +35,7 @@ public class StopEditWindow extends Window {
                 public boolean touchDown(float x, float y) {
                     stop.city = city;
                     World.w.buildGraph();
+                    airplane.initSchedule();
                     close();
                     return true;
                 }

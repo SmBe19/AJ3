@@ -37,6 +37,7 @@ public class WindowManager extends InputAdapter {
             }
         } else {
             windows.add(0, window);
+            clampWindow(window);
         }
     }
 
@@ -114,11 +115,15 @@ public class WindowManager extends InputAdapter {
         }
         camera.unproject(unproject.set(screenX, screenY, 0));
         currentWindow.onTouchUp(unproject.x - currentWindow.x, unproject.y - currentWindow.y);
-        currentWindow.x = MathUtils.clamp(currentWindow.x, -currentWindow.w * 0.8f, camera.viewportWidth - currentWindow.w * 0.2f);
-        currentWindow.y = MathUtils.clamp(currentWindow.y, -currentWindow.h + 22,camera.viewportHeight - currentWindow.h);
+        clampWindow(currentWindow);
         currentWindow = null;
         dragging = false;
         return true;
+    }
+
+    private void clampWindow(Window window) {
+        window.x = MathUtils.clamp(window.x, -window.w * 0.8f, camera.viewportWidth - window.w * 0.2f);
+        window.y = MathUtils.clamp(window.y, -window.h + 22,camera.viewportHeight - window.h);
     }
 
     @Override

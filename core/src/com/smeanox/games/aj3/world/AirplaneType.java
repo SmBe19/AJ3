@@ -3,9 +3,10 @@ package com.smeanox.games.aj3.world;
 import com.badlogic.gdx.graphics.Texture;
 
 public enum AirplaneType {
-    A ("A", "a", 100, 4, 1, 1, 10),
-    B ("B", "a", 1000, 50, 5, 2, 100),
-    C ("C", "a", 10000, 100, 8, 3, 1000),
+    A ("Cessna", "a", 100, 4, 1, 1, 10),
+    B ("Jumbo", "a", 1000, 50, 5, 2, 100),
+    C ("A380", "a", 10000, 200, 8, 3, 1000),
+    D ("Falcon9", "a", 100000, 20, 20, 5, 10000),
     ;
 
     public String name;
