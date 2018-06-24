@@ -5,8 +5,10 @@ import com.smeanox.games.aj3.Consts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class World {
     public static final World w = new World();
@@ -23,6 +25,7 @@ public class World {
     public float passengerRate, cityRate, cityRange;
 
     public Map<City, List<GraphPair>> networkGraph;
+    public Map<City, Set<City>> neighborGraph;
 
     private World() {
     }
@@ -31,14 +34,15 @@ public class World {
         tickNo = 0;
         money = 1000;
         passengerRate = 0.02f;
-        cityRate = 0.001f;
-        cityRange = 100;
+        cityRate = 0.002f;
+        cityRange = 150;
 
         cities = new ArrayList<City>();
         airplanes = new ArrayList<Airplane>();
         errorTexts = new ArrayList<ErrorText>();
         successTexts = new ArrayList<ErrorText>();
         networkGraph = new HashMap<City, List<GraphPair>>();
+        neighborGraph = new HashMap<City, Set<City>>();
 
         String name = generateName();
         String code = generateCode(name);
@@ -156,8 +160,10 @@ public class World {
 
     public void buildGraph() {
         networkGraph.clear();
+        neighborGraph.clear();
         for (City city : cities) {
             networkGraph.put(city, new ArrayList<GraphPair>());
+            neighborGraph.put(city, new HashSet<City>());
         }
         for (Airplane airplane : airplanes) {
             if (airplane.schedule.size() < 2) {
@@ -171,6 +177,7 @@ public class World {
                 float dist = dist(prev, airplaneStop.city);
                 float time = dist / airplane.type.speed;
                 networkGraph.get(prev).add(new GraphPair(airplaneStop.city, dist, time));
+                neighborGraph.get(prev).add(airplaneStop.city);
                 prev = airplaneStop.city;
             }
         }
@@ -206,7 +213,7 @@ public class World {
         }
 
         for (int i = successTexts.size() - 1; i >= 0; i--) {
-            if (tickNo - successTexts.get(i).shown > 40) {
+            if (tickNo - successTexts.get(i).shown > 100) {
                 successTexts.remove(i);
             }
         }

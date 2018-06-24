@@ -13,7 +13,7 @@ public class BuyAirplaneWindow extends Window {
     private final Map<AirplaneType, Button> typeButtons;
 
     public BuyAirplaneWindow(float x, float y, final ChooseHandler handler) {
-        super(x, y, 250, 400);
+        super(x, y, 250, 250);
         this.handler = handler;
 
         typeButtons = new HashMap<AirplaneType, Button>();
@@ -34,7 +34,7 @@ public class BuyAirplaneWindow extends Window {
             offy += 50;
         }
 
-        uiElements.add(new Button(w - 74, 10, Img.close.t, new Button.OnClickHandler() {
+        uiElements.add(new Button(w - 42, 10, 32, 32, Img.close.t, new Button.OnClickHandler() {
             @Override
             public void onClick() {
                 handler.chose(null);

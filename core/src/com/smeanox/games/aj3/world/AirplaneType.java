@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 
 public enum AirplaneType {
     A ("Cessna", "a", 100, 4, 1, 1, 10),
-    B ("Jumbo", "b", 1000, 50, 5, 2, 100),
-    C ("A380", "c", 10000, 200, 8, 3, 1000),
-    D ("Falcon9", "d", 100000, 20, 20, 5, 10000),
+    B ("Learjet 35", "b", 1000, 42, 5, 2, 100),
+    C ("A380", "c", 10000, 200, 8, 4, 1000),
+    D ("Falcon9", "d", 100000, 20, 20, 10, 10000),
     ;
 
     public String name;

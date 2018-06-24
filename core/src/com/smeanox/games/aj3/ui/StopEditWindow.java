@@ -46,12 +46,14 @@ public class StopEditWindow extends Window {
             @Override
             public void onClick() {
                 stop.condition = new AirplaneStop.ConditionEmpty();
+                airplane.initSchedule();
             }
         }));
         uiElements.add(new Button(50, 10, 32, 32, Img.waitFull.t, new Button.OnClickHandler() {
             @Override
             public void onClick() {
                 stop.condition = new AirplaneStop.ConditionFull();
+                airplane.initSchedule();
             }
         }));
         uiElements.add(new Button(90, 10, 32, 32, Img.waitTimeMinus.t, new Button.OnClickHandler() {
@@ -65,6 +67,7 @@ public class StopEditWindow extends Window {
                 } else {
                     stop.condition = new AirplaneStop.ConditionTime(10);
                 }
+                airplane.initSchedule();
             }
         }));
         uiElements.add(new Button(130, 10, 32, 32, Img.waitTimePlus.t, new Button.OnClickHandler() {
@@ -76,6 +79,7 @@ public class StopEditWindow extends Window {
                 } else {
                     stop.condition = new AirplaneStop.ConditionTime(10);
                 }
+                airplane.initSchedule();
             }
         }));
         uiElements.add(new Button(170, 10, 32, 32, Img.waitPassengerMinus.t, new Button.OnClickHandler() {
@@ -89,6 +93,7 @@ public class StopEditWindow extends Window {
                 } else {
                     stop.condition = new AirplaneStop.ConditionPassenger(1);
                 }
+                airplane.initSchedule();
             }
         }));
         uiElements.add(new Button(210, 10, 32, 32, Img.waitPassengerPlus.t, new Button.OnClickHandler() {
@@ -100,6 +105,7 @@ public class StopEditWindow extends Window {
                 } else {
                     stop.condition = new AirplaneStop.ConditionPassenger(1);
                 }
+                airplane.initSchedule();
             }
         }));
     }

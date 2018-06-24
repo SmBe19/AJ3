@@ -28,7 +28,7 @@ public class Airplane implements Location, Ticking {
         this.currentScheduleEntry = 0;
         this.startTime = -1;
         this.waitTime = -1;
-        this.landedTime = -1;
+        this.landedTime = 0;
         this.uniqueNumber = ++lastUniqueNumber;
     }
 
@@ -49,6 +49,7 @@ public class Airplane implements Location, Ticking {
         float dist = World.dist(start, destination);
         long cost = (long) Math.ceil(dist * type.pricePerDist);
         if (World.w.money < cost) {
+            World.w.errorTexts.add(World.w.new ErrorText("Not enough money to start", start.x, start.y));
             return;
         }
         World.w.money -= cost;

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -40,6 +41,7 @@ public class GameScreen implements Screen {
     private float width, height;
     private OrthographicCamera uiCamera, mapCamera;
     private SpriteBatch spriteBatch;
+    private ShapeRenderer shapeRenderer;
     private WindowManager windowManager;
     private UIElement clickedUIElement;
     private List<UIElement> uiElements;
@@ -68,6 +70,7 @@ public class GameScreen implements Screen {
         }
 
         spriteBatch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
 
         uiElements = new ArrayList<UIElement>();
         uiElements.add(new Button(0, 4, Img.buyAirplane.t, new Button.OnClickHandler() {
@@ -76,7 +79,7 @@ public class GameScreen implements Screen {
                 if (buyingAirplane != null) {
                     buyingAirplane = null;
                 } else {
-                    windowManager.addWindow(new BuyAirplaneWindow(width - 300, 20, new BuyAirplaneWindow.ChooseHandler() {
+                    windowManager.addWindow(new BuyAirplaneWindow(width - 300, 170, new BuyAirplaneWindow.ChooseHandler() {
                         @Override
                         public void chose(AirplaneType type) {
                             buyingAirplane = type;
@@ -160,6 +163,20 @@ public class GameScreen implements Screen {
         spriteBatch.setProjectionMatrix(mapCamera.combined);
 
         renderMap();
+
+        spriteBatch.end();
+
+        shapeRenderer.setProjectionMatrix(mapCamera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(AJ3Colors.orange.c);
+        for (City city : World.w.cities) {
+            for (City neighbor : World.w.neighborGraph.get(city)) {
+                shapeRenderer.line(city.x, city.y, neighbor.x, neighbor.y);
+            }
+        }
+        shapeRenderer.end();
+
+        spriteBatch.begin();
 
         for (City city : World.w.cities) {
             Texture texture = cities[Math.min(city.level, cities.length - 1)];

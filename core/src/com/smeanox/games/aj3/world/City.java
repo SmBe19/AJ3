@@ -35,7 +35,7 @@ public class City implements Location, Ticking {
     }
 
     public long levelUpCost() {
-        return (long) Math.ceil(Math.pow(2, level)) * 10000;
+        return (long) Math.ceil(Math.pow(2, level)) * 1000;
     }
 
     public void levelUp() {

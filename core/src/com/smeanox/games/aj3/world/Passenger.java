@@ -32,8 +32,8 @@ public class Passenger {
     public void arriveDestination() {
         long duration = World.w.tickNo - startTime;
         float dist = World.dist(start, destination);
-        float speed = dist / duration;
-        long newMoney = (long) Math.ceil(speed * 70);
+        float speed = (dist * dist) / duration;
+        long newMoney = (long) Math.ceil(speed * 1.1f);
         World.w.money += newMoney;
         start = destination;
         destination = null;
