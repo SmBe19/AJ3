@@ -14,10 +14,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.smeanox.games.aj3.AJ3Colors;
 import com.smeanox.games.aj3.Consts;
+import com.smeanox.games.aj3.ui.AirplaneListWindow;
 import com.smeanox.games.aj3.ui.Button;
 import com.smeanox.games.aj3.ui.BuyAirplaneWindow;
 import com.smeanox.games.aj3.ui.Font;
 import com.smeanox.games.aj3.ui.Img;
+import com.smeanox.games.aj3.ui.RouteEditWindow;
 import com.smeanox.games.aj3.ui.UIElement;
 import com.smeanox.games.aj3.ui.Window;
 import com.smeanox.games.aj3.ui.WindowManager;
@@ -69,11 +71,6 @@ public class GameScreen implements Screen {
                 if (buyingAirplane != null) {
                     buyingAirplane = null;
                 } else {
-                    for (Window window : windowManager.windows) {
-                        if (window instanceof BuyAirplaneWindow) {
-                            return;
-                        }
-                    }
                     windowManager.addWindow(new BuyAirplaneWindow(width - 300, 20, new BuyAirplaneWindow.ChooseHandler() {
                         @Override
                         public void chose(AirplaneType type) {
@@ -83,11 +80,22 @@ public class GameScreen implements Screen {
                 }
             }
         }));
+
+        uiElements.add(new Button(0, 4, Img.listAirplane.t, new Button.OnClickHandler() {
+            @Override
+            public void onClick() {
+                windowManager.addWindow(new AirplaneListWindow(width - 400, 120));
+            }
+        }));
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(new InputMultiplexer(windowManager, new Inputter()));
+        for (int i = 0; i < 20; i++) {
+            World.w.money += 1000;
+            World.w.buyAirplane(AirplaneType.A, World.w.cities.get(0));
+        }
     }
 
     public void update(float delta) {
@@ -118,7 +126,7 @@ public class GameScreen implements Screen {
         return sb.toString();
     }
 
-    public static void renderTextAligned(SpriteBatch spriteBatch, BitmapFont font, String text, float x, float y, float xAlign, float yAlign) {
+    public static void  renderTextAligned(SpriteBatch spriteBatch, BitmapFont font, String text, float x, float y, float xAlign, float yAlign) {
         glyphLayout.setText(font, text);
         //font.draw(spriteBatch, text, x + xAlign * glyphLayout.width, y + yAlign * glyphLayout.height);
         font.draw(spriteBatch, glyphLayout, x + xAlign * glyphLayout.width, y + yAlign * glyphLayout.height);
@@ -187,11 +195,10 @@ public class GameScreen implements Screen {
             renderTextAligned(spriteBatch, Font.f16.f, errorText.text, project.x, project.y, -0.5f, -0.5f);
         }
 
-        windowManager.render(spriteBatch);
-
         spriteBatch.draw(bg, 0, 0, width, height);
 
         uiElements.get(0).x = width - 68; // buy airplane
+        uiElements.get(1).x = width - 136; // list airplane
         for (UIElement uiElement : uiElements) {
             uiElement.render(spriteBatch, 0, 0);
         }
@@ -200,7 +207,16 @@ public class GameScreen implements Screen {
         Font.f24.f.draw(spriteBatch, Consts.GAME_NAME, 10, height - 10);
         renderTextAligned(spriteBatch, Font.f24.f, formatMoney(World.w.money), width - 10, height - 10, -1, 0);
 
+        windowManager.render(spriteBatch);
+
         spriteBatch.end();
+    }
+
+    public void buyAirplane(City city) {
+        Airplane airplane = World.w.buyAirplane(buyingAirplane, city);
+        if (airplane != null) {
+            windowManager.addWindow(new RouteEditWindow(20, 40, airplane));
+        }
     }
 
     @Override
@@ -275,8 +291,7 @@ public class GameScreen implements Screen {
                     if (clickedCity != null) {
                         if (clickedCity.currentAirplanes.size() < clickedCity.capacityAirplanes) {
                             if (World.w.money >= buyingAirplane.price) {
-                                clickedCity.currentAirplanes.add(new Airplane(buyingAirplane));
-                                World.w.money -= buyingAirplane.price;
+                                buyAirplane(clickedCity);
                             } else {
                                 World.w.errorTexts.add(World.w.new ErrorText("Not enough money", project.x, project.y));
                             }

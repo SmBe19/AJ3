@@ -15,7 +15,7 @@
    version="1.1"
    id="svg125"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="remove.svg">
+   sodipodi:docname="list_airplane.svg">
   <defs
      id="defs119" />
   <sodipodi:namedview
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="8"
-     inkscape:cx="-8.455937"
-     inkscape:cy="26.6703"
+     inkscape:cx="30.981563"
+     inkscape:cy="21.6703"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -46,7 +46,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -56,11 +56,32 @@
      id="layer1"
      transform="translate(0,-280.06664)">
     <rect
-       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:1.12455738;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect1290"
-       width="10.583333"
-       height="3.96875"
-       x="3.1750002"
-       y="286.54895" />
+       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:0.86244601;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2206"
+       width="13.229167"
+       height="1.8520833"
+       x="1.8520833"
+       y="281.91873" />
+    <rect
+       y="284.56454"
+       x="1.8520833"
+       height="1.8520833"
+       width="13.229167"
+       id="rect2208"
+       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:0.86244601;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="287.21042"
+       x="1.8520833"
+       height="1.8520833"
+       width="13.229167"
+       id="rect2210"
+       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:0.86244601;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:0.86244601;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2212"
+       width="13.229167"
+       height="1.8520833"
+       x="1.8520833"
+       y="289.85623" />
   </g>
 </svg>

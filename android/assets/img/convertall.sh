@@ -20,3 +20,4 @@ done
 ./convert.sh close.svg 64 64
 ./convert.sh level_up.svg 64 64
 ./convert.sh buy_airplane.svg 64 64
+./convert.sh list_airplane.svg 64 64

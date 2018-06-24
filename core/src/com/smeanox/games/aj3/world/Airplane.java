@@ -5,6 +5,9 @@ import java.util.List;
 
 public class Airplane implements Location, Ticking {
 
+    public static int lastUniqueNumber = 0;
+
+    public int uniqueNumber;
     public long startTime, waitTime, landedTime;
     public City start, destination;
     public final AirplaneType type;
@@ -18,7 +21,10 @@ public class Airplane implements Location, Ticking {
         this.schedule = new ArrayList<AirplaneStop>();
         this.passengers = new ArrayList<Passenger>();
         this.currentScheduleEntry = 0;
+        this.startTime = -1;
         this.waitTime = -1;
+        this.landedTime = -1;
+        this.uniqueNumber = ++lastUniqueNumber;
     }
 
     public void place(City city) {
@@ -28,6 +34,7 @@ public class Airplane implements Location, Ticking {
         start = city;
         destination = null;
         start.currentAirplanes.add(this);
+        schedule.add(new AirplaneStop(city));
     }
 
     public void start() {
@@ -89,6 +96,20 @@ public class Airplane implements Location, Ticking {
             return true;
         }
         return false;
+    }
+
+    public String getFullName() {
+        return type.name + " #" + uniqueNumber;
+    }
+
+    public String getLocationString() {
+        if (landedTime >= 0) {
+            return start.name + " [" + start.code + "]";
+        } else if (startTime >= 0 || waitTime >= 0) {
+            return start.fullName() + " -> " + destination.fullName();
+        } else {
+            return "unknown";
+        }
     }
 
     @Override

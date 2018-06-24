@@ -54,7 +54,7 @@ public class Button extends UIElement {
     @Override
     protected void doRender(SpriteBatch spriteBatch, float offX, float offY) {
         if (icon != null) {
-            spriteBatch.draw(icon, offX + x, offY + y);
+            spriteBatch.draw(icon, offX + x, offY + y, w, h);
         }
     }
 

@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="8"
-     inkscape:cx="-13.643437"
+     inkscape:cx="-35.955937"
      inkscape:cy="26.6703"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -56,20 +56,20 @@
      id="layer1"
      transform="translate(0,-280.06664)">
     <rect
-       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:1.25729334;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:1.12455738;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect1290"
-       width="13.229167"
+       width="10.583333"
        height="3.96875"
-       x="281.91873"
+       x="283.24164"
        y="-10.451035"
        transform="rotate(90)" />
     <rect
        transform="scale(-1)"
        y="-290.51767"
-       x="-15.08125"
+       x="-13.758333"
        height="3.96875"
-       width="13.229167"
+       width="10.583333"
        id="rect1837"
-       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:1.25729334;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#000000;fill-opacity:0.99595139;stroke:none;stroke-width:1.12455738;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>

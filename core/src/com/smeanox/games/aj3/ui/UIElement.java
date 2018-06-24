@@ -16,13 +16,19 @@ public abstract class UIElement {
         this.h = h;
     }
 
-    public void update() {}
+    public void update() {
+    }
 
     public boolean touchDown(float x, float y) {
         return false;
     }
 
-    public void touchUp(float x, float y) {}
+    public void touchUp(float x, float y) {
+    }
+
+    public boolean scrolled(float amount, float xx, float yy) {
+        return false;
+    }
 
     public boolean inside(float xx, float yy) {
         return visible && x <= xx && xx <= x + w && y <= yy && yy <= y + h;
@@ -33,7 +39,12 @@ public abstract class UIElement {
             return;
         }
         if (background != null) {
-            Window.ninePatch(spriteBatch, background, 30, 4, 30, offX + x, offY + y, w, h);
+            if (w < 64 && h < 64) {
+                // TODO fix nine patch
+                spriteBatch.draw(background, offX + x, offY + y, w, h);
+            } else {
+                Window.ninePatch(spriteBatch, background, 30, 4, 30, offX + x, offY + y, w, h);
+            }
         }
         doRender(spriteBatch, offX, offY);
     }

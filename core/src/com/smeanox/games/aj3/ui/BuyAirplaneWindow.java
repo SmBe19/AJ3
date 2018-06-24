@@ -21,7 +21,8 @@ public class BuyAirplaneWindow extends Window {
         int offy = 16;
         for (final AirplaneType airplaneType : AirplaneType.values()) {
             uiElements.add(new ImgField(20, h - offy - 40, airplaneType.imgBuy));
-            uiElements.add(new TextField(140, h - offy - 18, 90, 20, GameScreen.formatMoney(airplaneType.price), -1, 0));
+            uiElements.add(new TextField(140, h - offy - 8, 90, 20, airplaneType.name, -1, 0));
+            uiElements.add(new TextField(140, h - offy - 28, 90, 20, GameScreen.formatMoney(airplaneType.price), -1, 0));
             Button button = new Button(10, h - offy - 46, 230, 46, null, new Button.OnClickHandler() {
                 @Override
                 public void onClick() {

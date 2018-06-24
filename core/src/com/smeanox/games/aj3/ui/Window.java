@@ -21,6 +21,14 @@ public class Window {
         uiElements = new ArrayList<UIElement>();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass().equals(this.getClass())) {
+            return true;
+        }
+        return super.equals(o);
+    }
+
     public void add(UIElement... uiElements) {
         this.uiElements.addAll(Arrays.asList(uiElements));
     }
@@ -31,12 +39,16 @@ public class Window {
         }
     }
 
+    public void close() {
+        WindowManager.wm.closeWindow(this);
+    }
+
     public void onTouchDown(float xx, float yy) {
         touchDownElement = null;
         for (UIElement uiElement : uiElements) {
-            if (uiElement.inside(xx, yy)) {
+            if (uiElement.inside(xx - x, yy - y)) {
                 touchDownElement = uiElement;
-                if (uiElement.touchDown(xx - uiElement.x, yy - uiElement.y)) {
+                if (uiElement.touchDown(xx - x, yy - y)) {
                     break;
                 }
             }
@@ -45,9 +57,20 @@ public class Window {
 
     public void onTouchUp(float xx, float yy) {
         if (touchDownElement != null) {
-            touchDownElement.touchUp(xx - touchDownElement.x, yy - touchDownElement.y);
+            touchDownElement.touchUp(xx - x, yy - y);
         }
         touchDownElement = null;
+    }
+
+    public boolean scrolled(float amount, float xx, float yy) {
+        for (UIElement uiElement : uiElements) {
+            if (uiElement.inside(xx - x, yy - y)) {
+                if (uiElement.scrolled(amount, xx - x, yy - y)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void render(SpriteBatch spriteBatch) {

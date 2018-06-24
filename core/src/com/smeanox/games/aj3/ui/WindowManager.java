@@ -1,8 +1,10 @@
 package com.smeanox.games.aj3.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ public class WindowManager extends InputAdapter {
 
     public static WindowManager wm;
 
-    private final OrthographicCamera camera;
+    public final OrthographicCamera camera;
     public final List<Window> windows;
     private Window currentWindow;
     private float touchDownX = -1, touchDownY = -1;
@@ -26,7 +28,16 @@ public class WindowManager extends InputAdapter {
     }
 
     public void addWindow(Window window) {
-        windows.add(0, window);
+        if (windows.contains(window)) {
+            for (Window window1 : windows) {
+                if (window.equals(window1)) {
+                    bringToFront(window1);
+                    break;
+                }
+            }
+        } else {
+            windows.add(0, window);
+        }
     }
 
     public void closeWindow(Window window) {
@@ -75,7 +86,7 @@ public class WindowManager extends InputAdapter {
             currentWindow = null;
             dragging = false;
         } else if (!dragging) {
-            currentWindow.onTouchDown(unproject.x - currentWindow.x, unproject.y - currentWindow.y);
+            currentWindow.onTouchDown(unproject.x, unproject.y);
         }
 
         return true;
@@ -103,8 +114,21 @@ public class WindowManager extends InputAdapter {
         }
         camera.unproject(unproject.set(screenX, screenY, 0));
         currentWindow.onTouchUp(unproject.x - currentWindow.x, unproject.y - currentWindow.y);
+        currentWindow.x = MathUtils.clamp(currentWindow.x, -currentWindow.w * 0.8f, camera.viewportWidth - currentWindow.w * 0.2f);
+        currentWindow.y = MathUtils.clamp(currentWindow.y, -currentWindow.h + 22,camera.viewportHeight - currentWindow.h);
         currentWindow = null;
         dragging = false;
         return true;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        camera.unproject(unproject.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+        for (Window window : windows) {
+            if (window.scrolled(amount, unproject.x, unproject.y)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

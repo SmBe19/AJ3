@@ -9,6 +9,7 @@ public enum Img {
     buttonDisabled ("button_disabled"),
     add("add"),
     buyAirplane("buy_airplane"),
+    listAirplane("list_airplane"),
     close("close"),
     levelUp("level_up"),
     remove("remove"),

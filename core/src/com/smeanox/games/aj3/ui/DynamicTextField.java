@@ -12,10 +12,10 @@ public class DynamicTextField extends TextField {
     @Override
     public void update() {
         super.update();
-        text = updater.update();
+        text = updater.update(this);
     }
 
     interface TextFieldUpdater {
-        String update();
+        String update(DynamicTextField textField);
     }
 }

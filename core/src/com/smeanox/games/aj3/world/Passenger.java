@@ -41,8 +41,12 @@ public class Passenger {
     public void arrive(City city) {
         currentLocation = city;
         nextDestination = null;
-        if (city == destination) {
-            arriveDestination();
+        chooseNextDestination();
+    }
+
+    public void chooseNextDestination() {
+        if (currentLocation == destination) {
+            chooseDestination();
         } else {
             chooseNextDestination(MathUtils.randomBoolean(0.6f) ? timeExtractor : distExtractor);
         }

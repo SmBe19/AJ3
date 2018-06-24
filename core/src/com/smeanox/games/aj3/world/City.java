@@ -46,8 +46,27 @@ public class City implements Location, Ticking {
         capacityPassengers *= 4;
     }
 
+    public String fullName(){
+        return name + " [" + code + "]";
+    }
+
     @Override
     public void tick() {
-        // TODO place passengers in airplanes
+        for (Passenger passenger : new ArrayList<Passenger>(passengers)) {
+            if (passenger.nextDestination == null) {
+                if (World.w.tickNo % 100 == 0) {
+                    passenger.chooseNextDestination();
+                }
+                break;
+            }
+            for (Airplane currentAirplane : currentAirplanes) {
+                if (currentAirplane.destination == passenger.nextDestination) {
+                    if (currentAirplane.board(passenger)) {
+                        passengers.remove(passenger);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

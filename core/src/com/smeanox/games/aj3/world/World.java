@@ -98,6 +98,7 @@ public class World {
                 name.append(consonants.charAt(MathUtils.random(consonants.length() - 1)));
             }
         }
+        name.replace(0, 1, name.substring(0, 1).toUpperCase());
         return name.toString();
     }
 
@@ -107,7 +108,7 @@ public class World {
         int a, b;
         a = MathUtils.random(1, name.length()-1);
         b = MathUtils.random(1, name.length()-1);
-        if (a < b) {
+        if (a > b) {
             a = a ^ b;
             b = a ^ b;
             a = a ^ b;
@@ -115,6 +116,17 @@ public class World {
         code.append(name.charAt(a));
         code.append(name.charAt(b));
         return code.toString().toUpperCase();
+    }
+
+    public Airplane buyAirplane(AirplaneType type, City city) {
+        if (World.w.money < type.price) {
+            return null;
+        }
+        Airplane newAirplane = new Airplane(type);
+        airplanes.add(newAirplane);
+        newAirplane.place(city);
+        World.w.money -= type.price;
+        return newAirplane;
     }
 
     public void buildGraph() {
