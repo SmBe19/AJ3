@@ -117,6 +117,21 @@ public class GameScreen implements Screen {
         windowManager.update();
     }
 
+    public static CharSequence formatNumberInto3(long number) {
+        StringBuilder sb = new StringBuilder();
+        if (number < 0) {
+            return "" + number;
+        }
+        if (number < 100) {
+            sb.append("0");
+        }
+        if (number < 10) {
+            sb.append("0");
+        }
+        sb.append(number);
+        return sb;
+    }
+
     public static String formatMoney(long money) {
         StringBuilder sb = new StringBuilder();
         if (money < 0) {
@@ -134,7 +149,7 @@ public class GameScreen implements Screen {
         sb.append(parts.get(parts.size() - 1));
         for (int i = parts.size() - 2; i >= 0; i--) {
             sb.append("'");
-            sb.append(String.format(Locale.US, "%03d", parts.get(i)));
+            sb.append(formatNumberInto3(parts.get(i)));
         }
         sb.append(" $");
         return sb.toString();
